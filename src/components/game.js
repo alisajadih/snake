@@ -149,7 +149,7 @@ const Game = () => {
             </div>
           </div>
           <div className="col-4 mt-5 ml-auto">
-            {joinPlayer && (
+            {!!joinPlayer && (
               <div className="alert alert-warning" role="alert">
                 <span>Welcome Player {joinPlayer} </span>
               </div>
