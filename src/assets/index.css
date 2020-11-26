@@ -10,7 +10,7 @@ body {
 
 .game-board {
   background-color: #232323;
-  margin: 0 auto;
+  margin: 0 0;
   position: relative;
   z-index: 1;
 }
