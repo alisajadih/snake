@@ -14,22 +14,43 @@ const mapArrowsToLetter = {
 const Game = () => {
   const [joinPlayer, setJoinPlayer] = useState(false);
 
-  const [snake, setSnake] = useState([]);
-  const [apple, setApple] = useState({});
-  const [id, setId] = useState(null);
+  // const [snake, setSnake] = useState([]);
+  // const [apple, setApple] = useState({});
+  // const [id, setId] = useState(null);
 
-  const [snakeTwo, setSnakeTwo] = useState([]);
-  const [appleTwo, setAppleTwo] = useState({});
-  const [idTwo, setIdTwo] = useState(null);
+  // const [snakeTwo, setSnakeTwo] = useState([]);
+  // const [appleTwo, setAppleTwo] = useState({});
+  // const [idTwo, setIdTwo] = useState(null);
 
-  const [snakeThree, setSnakeThree] = useState([]);
-  const [appleThree, setAppleThree] = useState({});
-  const [idThree, setIdThree] = useState(null);
+  // const [snakeThree, setSnakeThree] = useState([]);
+  // const [appleThree, setAppleThree] = useState({});
+  // const [idThree, setIdThree] = useState(null);
 
-  const [snakeFour, setSnakeFour] = useState([]);
-  const [appleFour, setAppleFour] = useState({});
-  const [idFour, setIdFour] = useState(null);
+  // const [snakeFour, setSnakeFour] = useState([]);
+  // const [appleFour, setAppleFour] = useState({});
+  // const [idFour, setIdFour] = useState(null);
 
+  const [currentId, setCurrentId] = useState(1);
+  const [socketData, setSocketData] = useState({
+    1: {
+      snake: [],
+      apple: {},
+    },
+    2: {
+      snake: [],
+      apple: {},
+    },
+    3: {
+      snake: [],
+      apple: {},
+    },
+    4: {
+      snake: [],
+      apple: {},
+    },
+  });
+
+  // console.log(socketData)
   const [error, setError] = useState("");
   const params = useParams();
   const socket = useMemo(() => {
@@ -42,30 +63,14 @@ const Game = () => {
       const data = JSON.parse(e.data);
       if (data.status === -1) {
         setError(data.message);
+      } else if ("auth" in data) {
+        setCurrentId(data.auth);
       } else {
-        const activeUserId = data.user_id;
-        const activeBoard = data.games.filter(
-          (game) => game.user_id === activeUserId
-        );
-        setSnake(activeBoard[0].snake);
-        setApple(activeBoard[0].apple);
-        setId(activeUserId)
         console.log(data)
-
-        const restBoardsArray = data.games.filter(
-          (game) => game.user_id !== activeUserId
-        );
-        setSnakeTwo(restBoardsArray[0].snake)
-        setAppleTwo(restBoardsArray[0].apple)
-        setIdTwo(restBoardsArray[0].user_id)
-
-        setSnakeThree(restBoardsArray[1].snake)
-        setAppleThree(restBoardsArray[1].apple)
-        setIdThree(restBoardsArray[1].user_id)
-
-        setSnakeFour(restBoardsArray[2].snake)
-        setAppleFour(restBoardsArray[2].apple)
-        setIdFour(restBoardsArray[2].user_id)
+        setSocketData((prev) => ({
+          ...prev,
+          [data.user_id]: { snake: data.snake, apple: data.apple },
+        }));
       }
     };
     socket.onclose = function (e) {
@@ -81,7 +86,7 @@ const Game = () => {
         socket.send(
           JSON.stringify({
             message: mapArrowsToLetter[e.key],
-            user_id: id,
+            user_id: currentId,
           })
         );
     };
@@ -89,7 +94,7 @@ const Game = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [socket, id]);
+  }, [socket, currentId]);
   return (
     <>
       <h1 className="mt-4">Snake Game</h1>
@@ -110,44 +115,34 @@ const Game = () => {
         )}
         <div className="row">
           <div className="col-4 d-flex flex-column justify-content-between">
-            <Board
-              className="mt-2"
-              haveScore
-              snake={snakeTwo}
-              apple={appleTwo}
-              width={210}
-              height={150}
-              userId={idTwo}
-            />
-            <Board
-              className="mt-2"
-              haveScore
-              snake={snakeThree}
-              apple={appleThree}
-              width={210}
-              height={150}
-              userId={idThree}
-            />
-            <Board
-              className="mt-2"
-              haveScore
-              snake={snakeFour}
-              apple={appleFour}
-              width={210}
-              height={150}
-              userId={idFour}
-            />
+            {Object.entries(socketData)
+              .filter(([key, value]) => {
+                //[key , {data}]
+                return parseInt(key) !== currentId;
+              })
+              .map(([key, data], index) => (
+                <Board
+                  key={index}
+                  className="mt-2"
+                  haveScore
+                  snake={data.snake}
+                  apple={data.apple}
+                  width={210}
+                  height={150}
+                  userId={key}
+                />
+              ))}
           </div>
           <div className="col-8">
             <div className="row">
               <div className="col-6">
-                <p className="text-info font-weight-bold">{`Score : ${snake.length}`}</p>
+                <p className="text-info font-weight-bold">{`Score : ${socketData[currentId].snake.length}`}</p>
               </div>
               <div className="col-6">
-                <p className="text-primary font-weight-bold text-right mr-5">{`user id: ${id}`}</p>
+                <p className="text-primary font-weight-bold text-right mr-5">{`user id: ${currentId}`}</p>
               </div>
             </div>
-            <Board snake={snake} apple={apple} width={700} height={500} />
+            <Board snake={socketData[currentId].snake} apple={socketData[currentId].apple} width={700} height={500} />
           </div>
           <div className="col-4" style={{ marginTop: 50 }}>
             <div className="alert alert-success" role="alert">
