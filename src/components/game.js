@@ -50,6 +50,7 @@ const Game = () => {
         setSnake(activeBoard[0].snake);
         setApple(activeBoard[0].apple);
         setId(activeUserId)
+        console.log(data)
 
         const restBoardsArray = data.games.filter(
           (game) => game.user_id !== activeUserId
@@ -149,12 +150,12 @@ const Game = () => {
             <Board snake={snake} apple={apple} width={700} height={500} />
           </div>
           <div className="col-4" style={{ marginTop: 50 }}>
-            <div class="alert alert-success" role="alert">
+            <div className="alert alert-success" role="alert">
               <span>{window.location.href}</span>
             </div>
           </div>
           <div className="col-4 mt-5 ml-auto">
-            <div class="alert alert-info" role="alert">
+            <div className="alert alert-info" role="alert">
               <span>Welcome Player {} join!</span>
             </div>
           </div>
