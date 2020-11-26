@@ -18,8 +18,6 @@ const mapArrowsToLetter = {
   ArrowRight: "r",
 };
 const Game = () => {
-  // const [mainState, setIsStart] = useSnake(INIT_STATE);
-  // const [secondState] = useSnake(INIT_STATE_SECOND_BOARD);
   const [snake, setSnake] = useState([]);
   const [apple, setApple] = useState({});
   const router = useParams();
@@ -30,10 +28,6 @@ const Game = () => {
     socket.onopen = (e) => {};
     socket.onmessage = function (e) {
       const data = JSON.parse(e.data);
-      // if (data.room_name) {
-      // } else {
-      //   console.log(data);
-      // }
       setSnake(data.snake);
       setApple(data.apple);
     };
@@ -41,26 +35,24 @@ const Game = () => {
       console.error("game socket closed");
     };
     const handleKeyDown = (e) => {
-      console.log(e.key);
-      socket.send(
-        JSON.stringify({
-          message: mapArrowsToLetter[e.key],
-          user_id: router.id,
-        })
-      );
+      const isArrows =
+        e.key === "ArrowUp" ||
+        e.key === "ArrowDown" ||
+        e.key === "ArrowLeft" ||
+        e.key === "ArrowRight";
+      isArrows &&
+        socket.send(
+          JSON.stringify({
+            message: mapArrowsToLetter[e.key],
+            user_id: router.id,
+          })
+        );
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [router.id, socket]);
-  // const handleSendSocket = () => {
-  //   socket.send(
-  //     JSON.stringify({
-  //     })
-  //   );
-  // };
-
   return (
     <>
       <h1>Snake Game</h1>
