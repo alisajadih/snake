@@ -45,6 +45,7 @@ const Game = () => {
     socket.onmessage = function (e) {
       const data = JSON.parse(e.data);
       if (data.status === -1) {
+        // This room is currently full - Create New Room!
         setError(data.message);
       } else if ("auth" in data) {
         setCurrentId(data.auth);
@@ -99,7 +100,7 @@ const Game = () => {
             <div className="col-12">
               <div class="alert alert-danger" role="alert">
                 <span>
-                  {`${error}.`}
+                  {`${error} - `}
                   <Link className="text-danger" to="/login">
                     Create New Room !
                   </Link>
