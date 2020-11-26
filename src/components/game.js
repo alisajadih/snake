@@ -3,7 +3,7 @@ import Board from "./board";
 import { useParams, Link, useLocation, useHistory } from "react-router-dom";
 
 const createSocket = (roomName) =>
-  new WebSocket("ws://" + "localhost:8000" + `/ws/play/${roomName}`);
+  new WebSocket("ws://" + "194.5.207.97:8000" + `/ws/play/${roomName}`);
 
 const mapArrowsToLetter = {
   ArrowUp: "u",
