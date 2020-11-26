@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-const Snake = props => {
-  const {rows, cols, snake, board} = props.state;
+const Snake = (props) => {
+  const { snake, width, height } = props;
 
   return (
     <>
@@ -11,12 +11,11 @@ const Snake = props => {
           className="snake"
           data-testid="snake"
           style={{
-            left: `${(board.width / cols) * dot.x}px`,
-            top: `${(board.height / rows) * dot.y}px`,
-            width: `${board.width / cols}px`,
-            height: `${board.height / rows}px`
+            left: `${(width / 20) * dot.x}px`,
+            top: `${(height / 14) * dot.y}px`,
+            width: `${width / 20}px`,
+            height: `${height / 14}px`,
           }}
-
         ></div>
       ))}
     </>

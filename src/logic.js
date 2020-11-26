@@ -57,7 +57,6 @@ export const snakeReducer = (state, action) => {
         const headSnake = actualSnake[0];
         const restSnake = actualSnake.slice(1);
         const dead = restSnake.some((snake) => checkEq(snake, headSnake));
-
         return dead ? INIT_STATE : { ...state, snake: actualSnake };
       }
 

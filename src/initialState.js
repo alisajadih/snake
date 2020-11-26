@@ -12,3 +12,13 @@ export const INIT_STATE = {
   snake: [{x: 2, y: 2}],
   apple: {x: 16, y: 2}
 };
+
+export const INIT_STATE_SECOND_BOARD = {
+  cols: 20,
+  rows: 14,
+  board: {width: 210, height: 150},
+  speed: 100,
+  moves: [EAST],
+  snake: [{x: 2, y: 2}],
+  apple: {x: 16, y: 2}
+}

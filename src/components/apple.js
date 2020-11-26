@@ -1,16 +1,18 @@
-import React from 'react';
+import React from "react";
 
-const Apple = props => {
-  const {cols, rows, apple, board} = props.state;
+const Apple = (props) => {
+  const { width, height, apple } = props;
   return (
     <div
       className="apple"
       data-testid="apple"
       style={{
-        left: `${apple.x * (board.width / cols)}px`,
-        top: `${apple.y * (board.height / rows)}px`,
-        width: `${board.width / cols}px`,
-        height: `${board.height / rows}px`
+        left: `${apple.x * (width / 20)}px`,
+
+        top: `${apple.y * (height / 14)}px`,
+
+        width: `${width / 20}px`,
+        height: `${height / 14}px`,
       }}
     ></div>
   );
