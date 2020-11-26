@@ -12,23 +12,7 @@ const mapArrowsToLetter = {
   ArrowRight: "r",
 };
 const Game = () => {
-  const [joinPlayer, setJoinPlayer] = useState(false);
-
-  // const [snake, setSnake] = useState([]);
-  // const [apple, setApple] = useState({});
-  // const [id, setId] = useState(null);
-
-  // const [snakeTwo, setSnakeTwo] = useState([]);
-  // const [appleTwo, setAppleTwo] = useState({});
-  // const [idTwo, setIdTwo] = useState(null);
-
-  // const [snakeThree, setSnakeThree] = useState([]);
-  // const [appleThree, setAppleThree] = useState({});
-  // const [idThree, setIdThree] = useState(null);
-
-  // const [snakeFour, setSnakeFour] = useState([]);
-  // const [appleFour, setAppleFour] = useState({});
-  // const [idFour, setIdFour] = useState(null);
+  const [joinPlayer, setJoinPlayer] = useState(0);
 
   const [currentId, setCurrentId] = useState(1);
   const [socketData, setSocketData] = useState({
@@ -50,7 +34,6 @@ const Game = () => {
     },
   });
 
-  // console.log(socketData)
   const [error, setError] = useState("");
   const params = useParams();
   const socket = useMemo(() => {
@@ -65,8 +48,10 @@ const Game = () => {
         setError(data.message);
       } else if ("auth" in data) {
         setCurrentId(data.auth);
-      } else {
+      } else if ("welcome" in data) {
+        setJoinPlayer(data.welcome);
         // console.log(data)
+      } else {
         setSocketData((prev) => ({
           ...prev,
           [data.user_id]: { snake: data.snake, apple: data.apple },
@@ -95,7 +80,16 @@ const Game = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [socket, currentId]);
-  // console.log(socketData)
+
+  useEffect(() => {
+    const handleTimeOut = () => {
+      if (joinPlayer) setJoinPlayer(0);
+    };
+    const timeout = window.setTimeout(handleTimeOut, 3000);
+    return () => {
+      window.clearTimeout(timeout, handleTimeOut);
+    };
+  }, [joinPlayer]);
   return (
     <>
       <h1 className="mt-4">Snake Game</h1>
@@ -108,7 +102,7 @@ const Game = () => {
                   {`${error}.`}
                   <Link className="text-danger" to="/login">
                     Create New Room !
-                  </Link>{" "}
+                  </Link>
                 </span>
               </div>
             </div>
@@ -118,7 +112,6 @@ const Game = () => {
           <div className="col-4 d-flex flex-column justify-content-between">
             {Object.entries(socketData)
               .filter(([key, value]) => {
-                //[key , {data}]
                 return parseInt(key) !== currentId;
               })
               .map(([key, data], index) => (
@@ -143,7 +136,12 @@ const Game = () => {
                 <p className="text-primary font-weight-bold text-right mr-5">{`user id: ${currentId}`}</p>
               </div>
             </div>
-            <Board snake={socketData[currentId].snake} apple={socketData[currentId].apple} width={700} height={500} />
+            <Board
+              snake={socketData[currentId].snake}
+              apple={socketData[currentId].apple}
+              width={700}
+              height={500}
+            />
           </div>
           <div className="col-4" style={{ marginTop: 50 }}>
             <div className="alert alert-success" role="alert">
@@ -151,9 +149,11 @@ const Game = () => {
             </div>
           </div>
           <div className="col-4 mt-5 ml-auto">
-            <div className="alert alert-info" role="alert">
-              <span>Welcome Player {} join!</span>
-            </div>
+            {joinPlayer && (
+              <div className="alert alert-warning" role="alert">
+                <span>Welcome Player {joinPlayer} </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

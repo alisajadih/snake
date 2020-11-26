@@ -24,7 +24,7 @@ const Board = ({ snake, apple, haveScore, className, userId, ...rest }) => {
           </div>
           <div className="col-6">
             <p className="font-weight-bold text-info">
-              user id:{userId === null && "No Player"}
+              user id:{userId }
             </p>
           </div>
         </div>
