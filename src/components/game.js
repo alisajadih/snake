@@ -116,7 +116,7 @@ const Game = () => {
         )}
         <div className="row">
           <div className="col-4 d-flex flex-column justify-content-between">
-            {/* {Object.entries(socketData)
+            {Object.entries(socketData)
               .filter(([key, value]) => {
                 //[key , {data}]
                 return parseInt(key) !== currentId;
@@ -132,7 +132,7 @@ const Game = () => {
                   height={150}
                   userId={key}
                 />
-              ))} */}
+              ))}
           </div>
           <div className="col-8">
             <div className="row">
@@ -143,7 +143,7 @@ const Game = () => {
                 <p className="text-primary font-weight-bold text-right mr-5">{`user id: ${currentId}`}</p>
               </div>
             </div>
-            {/* <Board snake={socketData[currentId].snake} apple={socketData[currentId].apple} width={700} height={500} /> */}
+            <Board snake={socketData[currentId].snake} apple={socketData[currentId].apple} width={700} height={500} />
           </div>
           <div className="col-4" style={{ marginTop: 50 }}>
             <div className="alert alert-success" role="alert">
