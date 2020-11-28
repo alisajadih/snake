@@ -13,6 +13,7 @@ const mapArrowsToLetter = {
 };
 const Game = () => {
   const [joinPlayer, setJoinPlayer] = useState(0);
+  const [bestScore , setBestScore] = useState(1)
 
   const [currentId, setCurrentId] = useState(1);
   const [socketData, setSocketData] = useState({
@@ -57,6 +58,7 @@ const Game = () => {
           ...prev,
           [data.user_id]: { snake: data.snake, apple: data.apple },
         }));
+        setBestScore((prev)=>Math.max(prev , data.snake.length))
       }
     };
     socket.onclose = function (e) {
@@ -93,7 +95,7 @@ const Game = () => {
   }, [joinPlayer]);
   return (
     <>
-      <h1 className="mt-4">Snake Game</h1>
+      {/* <h1 className="mt-4">Snake Game</h1> */}
       <div className="container mt-5">
         {error && (
           <div className="row">
@@ -130,10 +132,13 @@ const Game = () => {
           </div>
           <div className="col-8">
             <div className="row">
-              <div className="col-6">
+              <div className="col-4">
                 <p className="text-info font-weight-bold">{`Score : ${socketData[currentId].snake.length}`}</p>
               </div>
-              <div className="col-6">
+              <div className="col-4">
+                <p className="text-primary font-weight-bold text-center ">{`Best Score: ${bestScore}`}</p>
+              </div>
+              <div className="col-4">
                 <p className="text-primary font-weight-bold text-right mr-5">{`user id: ${currentId}`}</p>
               </div>
             </div>
