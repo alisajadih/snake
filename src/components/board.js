@@ -2,7 +2,7 @@ import React from "react";
 import Apple from "./apple";
 import Snake from "./snake";
 
-const Board = ({ snake, apple, haveScore, className, userId, ...rest }) => {
+const Board = ({ snake, apple, haveScore, className, userId, bestScore, ...rest }) => {
   return (
     <>
       <div
@@ -17,12 +17,17 @@ const Board = ({ snake, apple, haveScore, className, userId, ...rest }) => {
       </div>
       {haveScore && (
         <div className="row">
-          <div className="col-4">
+          <div className="col-2">
             <p className="font-weight-bold text-primary">
               score:{snake.length}
             </p>
           </div>
-          <div className="col-6">
+          <div className="col-3">
+            <p className="font-weight-bold text-info">
+              best:{ bestScore }
+            </p>
+          </div>
+          <div className="col-4">
             <p className="font-weight-bold text-info">
               user id:{userId }
             </p>

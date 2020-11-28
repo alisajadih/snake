@@ -13,7 +13,12 @@ const mapArrowsToLetter = {
 };
 const Game = () => {
   const [joinPlayer, setJoinPlayer] = useState(0);
-  const [bestScore , setBestScore] = useState(1)
+  const [bestScores, setBestScores] = useState({
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+  });
 
   const [currentId, setCurrentId] = useState(1);
   const [socketData, setSocketData] = useState({
@@ -58,7 +63,16 @@ const Game = () => {
           ...prev,
           [data.user_id]: { snake: data.snake, apple: data.apple },
         }));
-        setBestScore((prev)=>Math.max(prev , data.snake.length))
+        setBestScores((prev) => {
+          return {
+            ...prev,
+            [data.user_id]: Math.max(prev[data.user_id], data.snake.length),
+          };
+        });
+        // setBestScore((prev)=>{
+        //   const score = Math.max(prev.score , data.snake.length)
+        //   return {score ,userId :data.user_id}
+        // })
       }
     };
     socket.onclose = function (e) {
@@ -93,6 +107,14 @@ const Game = () => {
       window.clearTimeout(timeout, handleTimeOut);
     };
   }, [joinPlayer]);
+
+  // const bestScores = {
+  //   1: 0,
+  //   2: 0,
+  //   3: 0,
+  //   4: 0,
+  // };
+
   return (
     <>
       {/* <h1 className="mt-4">Snake Game</h1> */}
@@ -127,6 +149,7 @@ const Game = () => {
                   width={210}
                   height={150}
                   userId={key}
+                  bestScore = {bestScores[key]}
                 />
               ))}
           </div>
@@ -136,7 +159,7 @@ const Game = () => {
                 <p className="text-info font-weight-bold">{`Score : ${socketData[currentId].snake.length}`}</p>
               </div>
               <div className="col-4">
-                <p className="text-primary font-weight-bold text-center ">{`Best Score: ${bestScore}`}</p>
+                <p className="text-primary font-weight-bold text-center ">{`Best Score: ${bestScores[currentId]}`}</p>
               </div>
               <div className="col-4">
                 <p className="text-primary font-weight-bold text-right mr-5">{`user id: ${currentId}`}</p>
@@ -147,6 +170,7 @@ const Game = () => {
               apple={socketData[currentId].apple}
               width={700}
               height={500}
+
             />
           </div>
           <div className="col-4" style={{ marginTop: 50 }}>
